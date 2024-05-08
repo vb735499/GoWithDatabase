@@ -9,18 +9,17 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.22.x, 1.23.x]
+        go-version: [1.22.x]
         platform: [ubuntu-latest, macos-latest, windows-latest]
     
     runs-on: ${{ matrix.platform }}
 
     steps:
+    - uses: actions/checkout@v4.1.4
     - name: Install Go
       uses: actions/setup-go@v5.0.1
       with:
         stable: 'false'
         go-version: ${{ matrix.go-version }}
-
-    - uses: actions/checkout@v4.1.4
     - name: Test
       run: go test ./...
