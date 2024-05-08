@@ -101,6 +101,19 @@ func (basics BucketBasics) _DeleteObjects(bucketName string, objectKeys []string
 
 /*
 Describe:
+  - Print error message.
+
+parameters:
+@param err: Error message from AWS-SDK & UploadServer.
+*/
+func ErrorOccurMsg(err error) {
+	if err != nil {
+		log.Printf("Error occur: %v\n", err)
+	}
+}
+
+/*
+Describe:
   - Upload file to the AWS S3 bucket.
 
 parameters:
@@ -113,7 +126,8 @@ func (basics BucketBasics) UploadFile(bucketName string, memberId string, filePa
 	fileName := filePaths[len(filePaths)-1]
 	objectKey := "imgs/" + memberId + "/" + fileName
 	log.Println("FileName" + fileName)
-	basics._UploadFile(bucketName, objectKey, filePath)
+	err := basics._UploadFile(bucketName, objectKey, filePath)
+	ErrorOccurMsg(err)
 }
 
 /*
@@ -154,7 +168,8 @@ parameters:
 */
 func (basics BucketBasics) DownloadFile(bucketName string, memberId string, fileName string) {
 	objectKey := "imgs/" + memberId + "/" + fileName
-	basics._DownloadFile(bucketName, objectKey, fileName)
+	err := basics._DownloadFile(bucketName, objectKey, fileName)
+	ErrorOccurMsg(err)
 }
 
 /*
@@ -172,7 +187,8 @@ func (basics BucketBasics) DeleteObjects(bucketName string, memberId string, obj
 	for _, key := range objectKeys {
 		reDirectoryObjectsKeys = append(reDirectoryObjectsKeys, memberFolder+key)
 	}
-	basics._DeleteObjects(bucketName, reDirectoryObjectsKeys)
+	err := basics._DeleteObjects(bucketName, reDirectoryObjectsKeys)
+	ErrorOccurMsg(err)
 }
 
 /*

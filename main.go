@@ -17,5 +17,6 @@ func main() {
 	// bucketClient.DownloadFile(bucketName, username, filepath)
 	// bucketClient.DeleteObjects(bucketName, username, []string{filename})
 	router := createUploadServer()
-	router.SEngine.Run(":8080")
+	err := router.SEngine.Run(":8080")
+	ErrorOccurMsg(err)
 }

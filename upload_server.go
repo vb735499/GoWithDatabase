@@ -88,7 +88,8 @@ func createUploadServer() UploadServer {
 			filePath := "./imgs/" + memberId + "/" + file.Filename
 
 			// Upload the file to specific dst.
-			c.SaveUploadedFile(file, filePath)
+			err := c.SaveUploadedFile(file, filePath)
+			ErrorOccurMsg(err)
 
 			// Upload to the AWS S3 bucket.
 			bucketClient.UploadFile(bucketName, memberId, filePath)
@@ -97,6 +98,8 @@ func createUploadServer() UploadServer {
 			removeFile(filePath)
 		}
 		uploadInfo += fmt.Sprintf("'%d' files uploaded!\n", uploadSucces)
+		log.Printf("%v", uploadInfo)
+
 		// c.String(http.StatusOK, uploadInfo)
 		c.Redirect(http.StatusOK, "http://localhost/")
 	})
