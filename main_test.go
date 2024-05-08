@@ -1,10 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestPass(t *testing.T) {
 	router := createUploadServer()
-	router.SEngine.Run(":8080")
+	err := router.SEngine.Run(":8080")
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
 }
