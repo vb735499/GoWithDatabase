@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <form action="/api/upload" method="POST" enctype="multipart/form-data">
+        <label for="uploadfile">請選擇上傳的檔案(可拖拉檔案至此，支援jpg,jpeg,png,gif格式):</label> 
+        <br />
+        <input id="uploadfile" type="file" name="upload[]" multiple="multiple" required="required" draggable="true">
+        <br />
+        <label for="username">使用者名稱:</label> 
+        <input id="username" type="text" name="memberId">
+        <br />
+        <input type="submit" value="submit">
+    </form>
+
+</body>
+</html>
