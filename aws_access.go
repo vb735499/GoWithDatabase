@@ -107,9 +107,16 @@ parameters:
 @param err: Error message from AWS-SDK & UploadServer.
 */
 func ErrorOccurMsg(err error) {
-	if err != nil {
-		log.Printf("Error occur: %v\n", err)
+	logFileName := "./logs/aws_log_file.log"
+	logFile, f_err := os.OpenFile(logFileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if f_err != nil {
+		log.Fatal("Open file failed.")
+		return
 	}
+	defer logFile.Close()
+
+	debugLogFile := log.New(logFile, "[DEBUG]", log.Llongfile)
+	debugLogFile.Printf("Error occur: %v\n", err)
 }
 
 /*
