@@ -100,8 +100,9 @@ func createUploadServer() UploadServer {
 		uploadInfo += fmt.Sprintf("'%d' files uploaded!\n", uploadSucces)
 		log.Printf("%v", uploadInfo)
 
-		// c.String(http.StatusOK, uploadInfo)
-		c.Redirect(http.StatusOK, "/")
+		c.String(http.StatusOK, uploadInfo)
+
+		// c.Redirect(http.StatusOK, c.GetHeader("authority")+"/")
 	})
 	return router
 }
