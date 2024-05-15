@@ -102,14 +102,14 @@ func createUploadServer() UploadServer {
 			ErrorOccurMsg(err)
 			if err != nil {
 				removeFile(filePath)
-				c.JSON(http.StatusBadRequest, jsonMsg(string(http.StatusBadRequest), "Failed to save file."))
+				c.JSON(http.StatusBadRequest, jsonMsg(fmt.Sprint(http.StatusBadRequest), "Failed to save file."))
 			}
 
 			// Upload to the AWS S3 bucket.
 			upload_err := bucketClient.UploadFile(bucketName, memberId, filePath)
 			if upload_err != nil {
 				removeFile(filePath)
-				c.JSON(http.StatusBadRequest, jsonMsg(string(http.StatusBadRequest), "Upload file to AWS S3 bucket failed."))
+				c.JSON(http.StatusBadRequest, jsonMsg(fmt.Sprint(http.StatusBadRequest), "Upload file to AWS S3 bucket failed."))
 			}
 			// Remove file from web server.
 			removeFile(filePath)
@@ -117,7 +117,7 @@ func createUploadServer() UploadServer {
 		uploadInfo += fmt.Sprintf("'%d' files uploaded!\n", uploadSucces)
 		log.Printf("%v", uploadInfo)
 
-		c.JSON(http.StatusOK, jsonMsg(string(http.StatusOK), "The files upload is successfully."))
+		c.JSON(http.StatusOK, jsonMsg(fmt.Sprint(http.StatusOK), "The files upload is successfully."))
 		// c.String(http.StatusOK, uploadInfo)
 
 		// c.Redirect(http.StatusOK, c.GetHeader("authority")+"/")
