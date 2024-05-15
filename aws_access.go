@@ -128,13 +128,14 @@ parameters:
 @param memberId: User account id.
 @param filePath: The upload file path.
 */
-func (basics BucketBasics) UploadFile(bucketName string, memberId string, filePath string) {
+func (basics BucketBasics) UploadFile(bucketName string, memberId string, filePath string) error {
 	filePaths := strings.Split(filePath, "/")
 	fileName := filePaths[len(filePaths)-1]
 	objectKey := "imgs/" + memberId + "/" + fileName
 	log.Println("FileName" + fileName)
 	err := basics._UploadFile(bucketName, objectKey, filePath)
 	ErrorOccurMsg(err)
+	return err
 }
 
 /*

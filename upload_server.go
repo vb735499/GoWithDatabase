@@ -43,6 +43,16 @@ func toJson(_files map[string][]string) []map[string]string {
 	return out
 }
 
+func jsonMsg(statusCode string, Msg string) []map[string]string {
+	out := []map[string]string{}
+	tmp := map[string]string{
+		"statusCode": statusCode,
+		"Msg":        Msg,
+	}
+	out = append(out, tmp)
+	return out
+}
+
 func createUploadServer() UploadServer {
 	bucketName := "pic-image"
 	bucketClient := getClient()
@@ -90,17 +100,25 @@ func createUploadServer() UploadServer {
 			// Upload the file to specific dst.
 			err := c.SaveUploadedFile(file, filePath)
 			ErrorOccurMsg(err)
+			if err != nil {
+				removeFile(filePath)
+				c.JSON(http.StatusBadRequest, jsonMsg(string(http.StatusBadRequest), "Failed to save file."))
+			}
 
 			// Upload to the AWS S3 bucket.
-			bucketClient.UploadFile(bucketName, memberId, filePath)
-
+			upload_err := bucketClient.UploadFile(bucketName, memberId, filePath)
+			if upload_err != nil {
+				removeFile(filePath)
+				c.JSON(http.StatusBadRequest, jsonMsg(string(http.StatusBadRequest), "Upload file to AWS S3 bucket failed."))
+			}
 			// Remove file from web server.
 			removeFile(filePath)
 		}
 		uploadInfo += fmt.Sprintf("'%d' files uploaded!\n", uploadSucces)
 		log.Printf("%v", uploadInfo)
 
-		c.String(http.StatusOK, uploadInfo)
+		c.JSON(http.StatusOK, jsonMsg(string(http.StatusOK), "The files upload is successfully."))
+		// c.String(http.StatusOK, uploadInfo)
 
 		// c.Redirect(http.StatusOK, c.GetHeader("authority")+"/")
 	})
