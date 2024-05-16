@@ -117,7 +117,7 @@ func createUploadServer() UploadServer {
 		uploadInfo += fmt.Sprintf("'%d' files uploaded!\n", uploadSucces)
 		log.Printf("%v", uploadInfo)
 
-		c.JSON(http.StatusOK, jsonMsg(fmt.Sprint(http.StatusOK), "The files upload is successfully."))
+		c.JSON(http.StatusOK, jsonMsg(fmt.Sprint(http.StatusOK), uploadInfo))
 		// c.String(http.StatusOK, uploadInfo)
 
 		// c.Redirect(http.StatusOK, c.GetHeader("authority")+"/")
