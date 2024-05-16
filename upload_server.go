@@ -79,11 +79,13 @@ func createUploadServer() UploadServer {
 	})
 
 	router.SEngine.POST("/api/upload", func(c *gin.Context) {
+		uploadInfo := ""
+		uploadSucces := 0
+
 		form, _ := c.MultipartForm()
 		files := form.File["upload[]"]
 		memberId := form.Value["memberId"][0]
-		uploadInfo := ""
-		uploadSucces := 0
+		log.Println(form)
 
 		for _, file := range files {
 			fileType := strings.Split(file.Filename, ".")[1]
