@@ -1,6 +1,11 @@
 package main
 
+import "log"
+
 func main() {
 	router := createUploadServer()
-	router.SEngine.Run(":8080")
+	err := router.SEngine.Run(":8080")
+	if err != nil {
+		log.Println(err)
+	}
 }
