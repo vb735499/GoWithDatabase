@@ -101,7 +101,7 @@ func createUploadServer() UploadServer {
 
 			// Upload the file to specific dst.
 			err := c.SaveUploadedFile(file, filePath)
-			ErrorOccurMsg(err)
+			bucketClient.ErrorOccurMsg(err)
 			if err != nil {
 				removeFile(filePath)
 				c.JSON(http.StatusBadRequest, jsonMsg(fmt.Sprint(http.StatusBadRequest), "Failed to save file."))

@@ -17,7 +17,8 @@ import (
 // - GET, SELECT				| 0.0004 USD	/ every 1000+ requests.
 
 type BucketBasics struct {
-	S3Client *s3.Client
+	S3Client     *s3.Client
+	debugLogFile *log.Logger
 }
 
 // Upload(Create)
@@ -106,17 +107,8 @@ Describe:
 parameters:
 @param err: Error message from AWS-SDK & UploadServer.
 */
-func ErrorOccurMsg(err error) {
-	logFileName := "./logs/aws_log_file.log"
-	logFile, f_err := os.OpenFile(logFileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-	if f_err != nil {
-		log.Fatal("Open file failed.")
-		return
-	}
-	defer logFile.Close()
-
-	debugLogFile := log.New(logFile, "[DEBUG]", log.Llongfile)
-	debugLogFile.Printf("Error occur: %v\n", err)
+func (basics BucketBasics) ErrorOccurMsg(err error) {
+	basics.debugLogFile.Printf("Error occur: %v\n", err)
 }
 
 /*
@@ -134,7 +126,7 @@ func (basics BucketBasics) UploadFile(bucketName string, memberId string, filePa
 	objectKey := "imgs/" + memberId + "/" + fileName
 	log.Println("FileName" + fileName)
 	err := basics._UploadFile(bucketName, objectKey, filePath)
-	ErrorOccurMsg(err)
+	basics.ErrorOccurMsg(err)
 	return err
 }
 
@@ -177,7 +169,7 @@ parameters:
 func (basics BucketBasics) DownloadFile(bucketName string, memberId string, fileName string) {
 	objectKey := "imgs/" + memberId + "/" + fileName
 	err := basics._DownloadFile(bucketName, objectKey, fileName)
-	ErrorOccurMsg(err)
+	basics.ErrorOccurMsg(err)
 }
 
 /*
@@ -196,7 +188,7 @@ func (basics BucketBasics) DeleteObjects(bucketName string, memberId string, obj
 		reDirectoryObjectsKeys = append(reDirectoryObjectsKeys, memberFolder+key)
 	}
 	err := basics._DeleteObjects(bucketName, reDirectoryObjectsKeys)
-	ErrorOccurMsg(err)
+	basics.ErrorOccurMsg(err)
 }
 
 /*
@@ -214,7 +206,17 @@ func getClient() BucketBasics {
 
 	client := s3.NewFromConfig(cfg)
 
+	logFileName := "./logs/aws_log_file.log"
+	logFile, f_err := os.OpenFile(logFileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if f_err != nil {
+		log.Fatal("Open file failed.")
+	}
+	defer logFile.Close()
+
+	debugLogFile := log.New(logFile, "[DEBUG]", log.Llongfile)
+
 	return BucketBasics{
-		S3Client: client,
+		S3Client:     client,
+		debugLogFile: debugLogFile,
 	}
 }
